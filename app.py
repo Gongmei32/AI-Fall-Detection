@@ -1,4 +1,4 @@
-from camera.webcam import Webcam
+from src.camera.webcam import Webcam
 
 
 def main():
