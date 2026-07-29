@@ -15,19 +15,20 @@ class PoseDetector:
 
     def detect(self, frame):
 
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        results = self.pose.process(rgb_frame)
+        results = self.pose.process(rgb)
+ 
+        landmarks = None
 
         if results.pose_landmarks:
-            print("Pose detected")
 
             self.mp_draw.draw_landmarks(
                 frame,
                 results.pose_landmarks,
                 self.mp_pose.POSE_CONNECTIONS
             )
-        else:
-            print("No pose detected")
 
-        return frame, results
+            landmarks = results.pose_landmarks.landmark
+
+        return frame, landmarks
