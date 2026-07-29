@@ -19,3 +19,6 @@ A real-time computer vision project for detecting human falls using deep learnin
 
 ## Status
 🚧 Under Development
+
+## Title
+"An Explainable Multi-Modal Real-Time Human Fall Detection System Using Pose Estimation and Vision Transformers"
