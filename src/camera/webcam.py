@@ -2,6 +2,7 @@ import cv2
 import time
 
 from src.pose.pose_detector import PoseDetector
+from src.detector.fall_detector import FallDetector
 
 
 class Webcam:
@@ -14,7 +15,7 @@ class Webcam:
             raise Exception("Camera could not be opened")
 
         self.pose_detector = PoseDetector()
-
+        self.fall_detector = FallDetector()
         self.previous_time = 0
 
     def start(self):
@@ -37,6 +38,10 @@ class Webcam:
 
                 left_hip = landmarks[23]
                 right_hip = landmarks[24]
+                angle = self.fall_detector.calculate_angle(
+                    left_shoulder,
+                    left_hip
+               )
 
                 cv2.putText(
                     frame,
@@ -55,6 +60,15 @@ class Webcam:
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.6,
                     (255, 255, 0),
+                    2
+                )
+                cv2.putText(
+                    frame,
+                    f"Body Angle: {angle:.1f}",
+                    (20, 140),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    (0, 255, 255),
                     2
                 )
 
