@@ -13,6 +13,7 @@ class Webcam:
 
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
         print("Requested Resolution: 1920 x 1080")
         print("Actual Width :", self.camera.get(cv2.CAP_PROP_FRAME_WIDTH))
         print("Actual Height:", self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -26,10 +27,17 @@ class Webcam:
         self.previous_time = 0
 
     def start(self):
+
         cv2.namedWindow(
             "AI Fall Detection - Pose",
             cv2.WINDOW_NORMAL
-            )
+        )
+
+        cv2.resizeWindow(
+            "AI Fall Detection - Pose",
+            1920,
+            1080
+        )
 
         while True:
 
@@ -38,17 +46,25 @@ class Webcam:
             if not success:
                 break
 
+            # -------------------------------
             # Pose Detection
+            # -------------------------------
+
             frame, landmarks = self.pose_detector.detect(frame)
 
             if landmarks:
 
+                # Body landmarks
                 left_shoulder = landmarks[11]
                 right_shoulder = landmarks[12]
 
                 left_hip = landmarks[23]
                 right_hip = landmarks[24]
 
+                left_knee = landmarks[25]
+                left_ankle = landmarks[27]
+
+                # Body centers
                 shoulder_center = self.fall_detector.calculate_midpoint(
                     left_shoulder,
                     right_shoulder
@@ -59,12 +75,29 @@ class Webcam:
                     right_hip
                 )
 
-                angle = self.fall_detector.calculate_body_angle(
+                # Frame size
+                height, width, _ = frame.shape
+
+                # Feature calculations
+                body_angle = self.fall_detector.calculate_body_angle(
                     shoulder_center,
                     hip_center
                 )
 
-                height, width, _ = frame.shape
+                knee_angle = self.fall_detector.calculate_joint_angle(
+                    left_hip,
+                    left_knee,
+                    left_ankle
+                )
+
+                posture, posture_color = self.fall_detector.classify_posture(
+                    body_angle,
+                    knee_angle
+                )
+
+                # ------------------------------------
+                # Draw body center points
+                # ------------------------------------
 
                 cv2.circle(
                     frame,
@@ -88,52 +121,86 @@ class Webcam:
                     -1
                 )
 
+                # ------------------------------------
+                # Display information
+                # ------------------------------------
+
                 cv2.putText(
                     frame,
-                    f"Left Shoulder: ({left_shoulder.x:.2f}, {left_shoulder.y:.2f})",
-                    (20, 80),
+                    f"Left Shoulder : ({left_shoulder.x:.2f}, {left_shoulder.y:.2f})",
+                    (20, 100),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1.0,
                     (255, 255, 0),
-                    3
+                    2
                 )
 
                 cv2.putText(
                     frame,
-                    f"Right Hip: ({right_hip.x:.2f}, {right_hip.y:.2f})",
-                    (20, 110),
+                    f"Right Hip : ({right_hip.x:.2f}, {right_hip.y:.2f})",
+                    (20, 145),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1.0,
                     (255, 255, 0),
-                    3
+                    2
                 )
 
                 cv2.putText(
                     frame,
-                    f"Body Angle: {angle:.1f}",
-                    (20, 140),
+                    f"Body Angle : {body_angle:.1f}",
+                    (20, 190),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1.0,
                     (0, 255, 255),
+                    2
+                )
+
+                cv2.putText(
+                    frame,
+                    f"Knee Angle : {knee_angle:.1f}",
+                    (20, 235),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1.0,
+                    (255, 255, 255),
+                    2
+                )
+
+                cv2.putText(
+                    frame,
+                    f"Posture : {posture}",
+                    (20, 280),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1.2,
+                    posture_color,
                     3
                 )
 
+            # -------------------------------
             # FPS
+            # -------------------------------
+
             current_time = time.time()
 
-            fps = 1 / (current_time - self.previous_time) if self.previous_time else 0
+            fps = (
+                1 / (current_time - self.previous_time)
+                if self.previous_time else 0
+            )
 
             self.previous_time = current_time
 
             cv2.putText(
                 frame,
-                f"FPS: {int(fps)}",
-                (20, 40),
+                f"FPS : {int(fps)}",
+                (20, 50),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                1,
+                1.0,
                 (0, 255, 0),
                 2
             )
+
+            # -------------------------------
+            # Display Frame
+            # -------------------------------
 
             cv2.imshow(
                 "AI Fall Detection - Pose",
