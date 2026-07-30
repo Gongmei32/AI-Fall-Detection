@@ -3,7 +3,7 @@ from src.camera.webcam import Webcam
 
 def main():
 
-    camera = Webcam(0)
+    camera = Webcam(1)
     camera.start()
 
 

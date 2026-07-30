@@ -11,14 +11,25 @@ class Webcam:
 
         self.camera = cv2.VideoCapture(camera_index)
 
+        self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        print("Requested Resolution: 1920 x 1080")
+        print("Actual Width :", self.camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+        print("Actual Height:", self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
         if not self.camera.isOpened():
             raise Exception("Camera could not be opened")
 
         self.pose_detector = PoseDetector()
         self.fall_detector = FallDetector()
+
         self.previous_time = 0
 
     def start(self):
+        cv2.namedWindow(
+            "AI Fall Detection - Pose",
+            cv2.WINDOW_NORMAL
+            )
 
         while True:
 
@@ -27,10 +38,9 @@ class Webcam:
             if not success:
                 break
 
-            # Pose detection
+            # Pose Detection
             frame, landmarks = self.pose_detector.detect(frame)
 
-            # Display landmark coordinates
             if landmarks:
 
                 left_shoulder = landmarks[11]
@@ -38,19 +48,54 @@ class Webcam:
 
                 left_hip = landmarks[23]
                 right_hip = landmarks[24]
-                angle = self.fall_detector.calculate_angle(
+
+                shoulder_center = self.fall_detector.calculate_midpoint(
                     left_shoulder,
-                    left_hip
-               )
+                    right_shoulder
+                )
+
+                hip_center = self.fall_detector.calculate_midpoint(
+                    left_hip,
+                    right_hip
+                )
+
+                angle = self.fall_detector.calculate_body_angle(
+                    shoulder_center,
+                    hip_center
+                )
+
+                height, width, _ = frame.shape
+
+                cv2.circle(
+                    frame,
+                    (
+                        int(shoulder_center[0] * width),
+                        int(shoulder_center[1] * height)
+                    ),
+                    10,
+                    (0, 255, 255),
+                    -1
+                )
+
+                cv2.circle(
+                    frame,
+                    (
+                        int(hip_center[0] * width),
+                        int(hip_center[1] * height)
+                    ),
+                    10,
+                    (255, 0, 255),
+                    -1
+                )
 
                 cv2.putText(
                     frame,
                     f"Left Shoulder: ({left_shoulder.x:.2f}, {left_shoulder.y:.2f})",
                     (20, 80),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.6,
+                    1.0,
                     (255, 255, 0),
-                    2
+                    3
                 )
 
                 cv2.putText(
@@ -58,18 +103,19 @@ class Webcam:
                     f"Right Hip: ({right_hip.x:.2f}, {right_hip.y:.2f})",
                     (20, 110),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.6,
+                    1.0,
                     (255, 255, 0),
-                    2
+                    3
                 )
+
                 cv2.putText(
                     frame,
                     f"Body Angle: {angle:.1f}",
                     (20, 140),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.7,
+                    1.0,
                     (0, 255, 255),
-                    2
+                    3
                 )
 
             # FPS
