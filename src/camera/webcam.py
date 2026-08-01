@@ -37,6 +37,10 @@ class Webcam:
         self.fall_start_time = None
         self.fall_duration = 0.0
 
+        # Fall Confirmation
+        self.fall_detected = False
+        self.fall_threshold = 3.0   # seconds
+
     def start(self):
 
         cv2.namedWindow(
@@ -154,6 +158,18 @@ class Webcam:
                     self.fall_start_time = None
                     self.fall_duration = 0.0
 
+                # ------------------------------------
+                # Fall Confirmation
+                # ------------------------------------
+
+                if (
+                        posture == "Lying"
+                        and self.fall_duration >= self.fall_threshold
+                ):
+                    self.fall_detected = True
+                else:
+                    self.fall_detected = False
+
                 if self.current_posture != self.previous_posture:
 
                     print(
@@ -218,6 +234,7 @@ class Webcam:
                     posture,
                     posture_color,
                     self.fall_duration,
+                    self.fall_detected
                 )
 
             else:

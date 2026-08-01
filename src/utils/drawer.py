@@ -14,6 +14,7 @@ class Drawer:
         posture,
         posture_color,
         fall_duration,
+        fall_detected,
     ):
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -97,3 +98,27 @@ class Drawer:
             posture_color,
             3,
         )
+
+        if fall_detected:
+
+            cv2.putText(
+                frame,
+                "FALL DETECTED",
+                (20, 420),
+                font,
+                1.4,
+                (0, 0, 255),
+                3,
+            )
+
+        else:
+
+            cv2.putText(
+                frame,
+                "System Normal",
+                (20, 420),
+                font,
+                1.2,
+                (0, 255, 0),
+                2,
+            )

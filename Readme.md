@@ -125,3 +125,36 @@ Implemented a real-time fall duration timer to monitor how long a person remains
 - Uses `time.time()` to record the timestamp when the lying posture begins.
 - Calculates the elapsed duration each frame.
 - Resets the timer whenever the posture changes away from **Lying**.
+
+## Milestone 6.4 – Fall Confirmation Logic
+
+### Objective
+Implemented intelligent fall confirmation logic to reduce false alarms by verifying that a person remains in a lying posture for a predefined duration before declaring a fall.
+
+### Features Added
+- Added a configurable fall detection threshold.
+- Introduced a real-time fall confirmation flag.
+- Combined posture classification with fall duration to determine whether a fall has occurred.
+- Displays the current system status ("System Normal" or "FALL DETECTED") on the interface.
+- Improved the reliability of fall detection by avoiding immediate alerts when a person first lies down.
+
+### Technical Details
+The system continuously monitors the detected posture and the elapsed fall duration.
+
+A fall is confirmed only when:
+
+```
+Posture == "Lying"
+AND
+Fall Duration >= 3.0 seconds
+```
+
+When these conditions are satisfied:
+
+- `fall_detected` is set to `True`.
+- A **FALL DETECTED** warning is displayed.
+
+Otherwise:
+
+- `fall_detected` remains `False`.
+- The interface displays **System Normal**.
