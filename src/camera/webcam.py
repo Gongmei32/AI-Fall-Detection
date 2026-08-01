@@ -25,6 +25,8 @@ class Webcam:
         self.fall_detector = FallDetector()
 
         self.previous_time = 0
+        self.previous_posture = "Unknown"
+        self.current_posture = "Unknown"
 
     def start(self):
 
@@ -94,6 +96,16 @@ class Webcam:
                     body_angle,
                     knee_angle
                 )
+                self.current_posture = posture
+
+                if self.current_posture != self.previous_posture:
+
+                    print(
+                        f"Posture changed: "
+                        f"{self.previous_posture} -> {self.current_posture}"
+                    )
+
+                self.previous_posture = self.current_posture
 
                 # ------------------------------------
                 # Draw body center points

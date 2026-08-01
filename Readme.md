@@ -73,4 +73,16 @@ Lying
 ### Project Status
 ✅ Milestone 5 Completed
 
-The system can now recognize three fundamental human postures in real time, providing the foundation for fall event detection in the next milestone.
+The system can now recognize three fundamental human postures in real time, providing the foundation for fall event detection in the next milestone
+
+## Milestone 6.1 – Posture Transition Tracking 🔄
+
+### Objective
+Introduce temporal state tracking to monitor changes in human posture across consecutive video frames. This serves as the first step toward real-time fall event detection.
+
+### Features Implemented
+- Added previous posture memory.
+- Added current posture tracking.
+- Detected posture transitions in real time.
+- Displayed posture changes through terminal output.
+- Established the foundation for event-based fall detection.
