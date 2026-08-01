@@ -86,3 +86,26 @@ Introduce temporal state tracking to monitor changes in human posture across con
 - Detected posture transitions in real time.
 - Displayed posture changes through terminal output.
 - Established the foundation for event-based fall detection.
+
+## Milestone 6.2 – Hip Movement Speed Analysis
+
+### Objective
+Implemented hip movement speed tracking to improve fall detection accuracy. The system now monitors the vertical movement of the body's hip center between consecutive frames.
+
+### Features Added
+- Calculates the midpoint of both hips.
+- Tracks the previous hip position.
+- Computes hip movement speed using frame-to-frame displacement.
+- Displays Hip Speed in real time.
+- Continues tracking posture transitions.
+- Modularized the user interface using a dedicated `Drawer` class.
+- Improved code organization and readability.
+
+### Technical Details
+- Hip center is calculated from the left and right hip landmarks.
+- Hip speed is computed as:
+
+Hip Speed = |Current Hip Y − Previous Hip Y|
+
+- Higher values indicate faster body movement.
+- This metric will be used in later milestones to distinguish normal posture changes from actual falls.
