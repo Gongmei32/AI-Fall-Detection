@@ -33,6 +33,10 @@ class Webcam:
         self.previous_hip_y = None
         self.hip_speed = 0.0
 
+        # Fall Timer
+        self.fall_start_time = None
+        self.fall_duration = 0.0
+
     def start(self):
 
         cv2.namedWindow(
@@ -132,6 +136,24 @@ class Webcam:
 
                 self.current_posture = posture
 
+                # ------------------------------------
+                # Fall Duration Timer
+                # ------------------------------------
+
+                if posture == "Lying":
+
+                    if self.fall_start_time is None:
+                        self.fall_start_time = time.time()
+
+                    self.fall_duration = (
+                        time.time() - self.fall_start_time
+                    )
+
+                else:
+
+                    self.fall_start_time = None
+                    self.fall_duration = 0.0
+
                 if self.current_posture != self.previous_posture:
 
                     print(
@@ -195,6 +217,7 @@ class Webcam:
                     self.hip_speed,
                     posture,
                     posture_color,
+                    self.fall_duration,
                 )
 
             else:

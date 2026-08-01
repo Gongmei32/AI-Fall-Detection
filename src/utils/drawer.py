@@ -13,6 +13,7 @@ class Drawer:
         hip_speed,
         posture,
         posture_color,
+        fall_duration,
     ):
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -79,8 +80,18 @@ class Drawer:
 
         cv2.putText(
             frame,
-            f"Posture         : {posture}",
+            f"Fall Time       : {fall_duration:.1f} s",
             (20, 325),
+            font,
+            1,
+            (0, 165, 255),
+            2,
+        )
+
+        cv2.putText(
+            frame,
+            f"Posture         : {posture}",
+            (20, 370),
             font,
             1.2,
             posture_color,

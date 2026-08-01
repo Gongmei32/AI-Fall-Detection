@@ -109,3 +109,19 @@ Hip Speed = |Current Hip Y − Previous Hip Y|
 
 - Higher values indicate faster body movement.
 - This metric will be used in later milestones to distinguish normal posture changes from actual falls.
+
+## Milestone 6.3 – Fall Duration Timer
+
+### Objective
+Implemented a real-time fall duration timer to monitor how long a person remains in a lying posture. This helps distinguish normal activities from potential falls.
+
+### Features Added
+- Introduced a fall timer that starts when the posture is classified as **Lying**.
+- Automatically resets the timer when the user returns to **Standing** or **Sitting**.
+- Displays the elapsed fall duration in real time.
+- Integrated the timer into the information panel.
+
+### Technical Details
+- Uses `time.time()` to record the timestamp when the lying posture begins.
+- Calculates the elapsed duration each frame.
+- Resets the timer whenever the posture changes away from **Lying**.
