@@ -157,4 +157,30 @@ When these conditions are satisfied:
 Otherwise:
 
 - `fall_detected` remains `False`.
-- The interface displays **System Normal**.
+- The interface displays **System Normal**
+
+## Milestone 6.5 — Fall Confidence Scoring
+
+### ✅ Completed
+
+Implemented a confidence-based fall detection system that evaluates multiple body features before confirming a fall.
+
+### Features
+
+- Body Angle Calculation
+- Knee Angle Calculation
+- Hip Speed Tracking
+- Maximum Hip Speed Recording
+- Posture Classification
+- Fall Duration Timer
+- Confidence Score (0–100%)
+- Multi-condition Fall Confirmation
+- Live Information Overlay
+
+### Confidence Factors
+
+- Body Angle
+- Knee Angle
+- Hip Speed
+- Posture
+- Fall Duration

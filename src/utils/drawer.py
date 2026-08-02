@@ -10,11 +10,12 @@ class Drawer:
         right_hip,
         body_angle,
         knee_angle,
-        hip_speed,
+        max_hip_speed,
         posture,
         posture_color,
         fall_duration,
         fall_detected,
+        fall_confidence,
     ):
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -71,7 +72,7 @@ class Drawer:
 
         cv2.putText(
             frame,
-            f"Hip Speed       : {hip_speed:.3f}",
+            f"Hip Speed   : {max_hip_speed:.3f}",
             (20, 280),
             font,
             1,
@@ -91,8 +92,18 @@ class Drawer:
 
         cv2.putText(
             frame,
-            f"Posture         : {posture}",
+            f"Confidence     : {fall_confidence:.0f}%",
             (20, 370),
+            font,
+            1,
+            (255, 255, 0),
+            2,
+        )
+
+        cv2.putText(
+            frame,
+            f"Posture         : {posture}",
+            (20, 400),
             font,
             1.2,
             posture_color,
@@ -116,7 +127,7 @@ class Drawer:
             cv2.putText(
                 frame,
                 "System Normal",
-                (20, 420),
+                (20, 460),
                 font,
                 1.2,
                 (0, 255, 0),

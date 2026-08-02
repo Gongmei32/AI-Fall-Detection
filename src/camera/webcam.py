@@ -31,7 +31,9 @@ class Webcam:
         self.current_posture = "Unknown"
 
         self.previous_hip_y = None
+
         self.hip_speed = 0.0
+        self.max_hip_speed = 0.0
 
         # Fall Timer
         self.fall_start_time = None
@@ -39,7 +41,8 @@ class Webcam:
 
         # Fall Confirmation
         self.fall_detected = False
-        self.fall_threshold = 3.0   # seconds
+        self.fall_threshold = 2.0   # seconds
+        self.fall_confidence = 0 
 
     def start(self):
 
@@ -105,6 +108,8 @@ class Webcam:
                     )
 
                 self.previous_hip_y = current_hip_y
+                if self.hip_speed > self.max_hip_speed:
+                    self.max_hip_speed = self.hip_speed
 
                 # -----------------------------
                 # Frame Size
@@ -138,6 +143,17 @@ class Webcam:
                     )
                 )
 
+                self.fall_confidence = (
+                    self.fall_detector.calculate_confidence(
+                        body_angle,
+                        knee_angle,
+                        self.max_hip_speed,
+                        posture,
+                        self.fall_duration,
+                    )
+                )   
+        
+
                 self.current_posture = posture
 
                 # ------------------------------------
@@ -158,17 +174,22 @@ class Webcam:
                     self.fall_start_time = None
                     self.fall_duration = 0.0
 
+                    ##reset timer##
+                    self.max_hip_speed = 0.0
+                    self.hip_speed = 0.0
+
+                    ##reset fall detection##
+                    self.fall_detected = False
+                    self.fall_confidence = 0
+
                 # ------------------------------------
                 # Fall Confirmation
                 # ------------------------------------
 
-                if (
-                        posture == "Lying"
-                        and self.fall_duration >= self.fall_threshold
-                ):
-                    self.fall_detected = True
-                else:
-                    self.fall_detected = False
+                self.fall_detected = (
+                    self.fall_confidence >= 70
+                    and self.max_hip_speed >= 0.005
+                )
 
                 if self.current_posture != self.previous_posture:
 
@@ -230,11 +251,12 @@ class Webcam:
                     right_hip,
                     body_angle,
                     knee_angle,
-                    self.hip_speed,
+                    self.max_hip_speed,
                     posture,
                     posture_color,
                     self.fall_duration,
-                    self.fall_detected
+                    self.fall_detected,
+                    self.fall_confidence,
                 )
 
             else:
