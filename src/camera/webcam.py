@@ -44,8 +44,13 @@ class Webcam:
         self.fall_threshold = 2.0   # seconds
         self.fall_confidence = 0 
 
-    def start(self):
+        # -----------------------------
+        # Transition Detection
+        # -----------------------------
 
+        self.transition = "None"
+        
+    def start(self):
         cv2.namedWindow(
             "AI Fall Detection - Pose",
             cv2.WINDOW_NORMAL
@@ -142,6 +147,8 @@ class Webcam:
                         knee_angle
                     )
                 )
+                self.previous_posture = self.current_posture
+                self.current_posture = posture
 
                 self.fall_confidence = (
                     self.fall_detector.calculate_confidence(
@@ -152,9 +159,6 @@ class Webcam:
                         self.fall_duration,
                     )
                 )   
-        
-
-                self.current_posture = posture
 
                 # ------------------------------------
                 # Fall Duration Timer
@@ -193,13 +197,16 @@ class Webcam:
 
                 if self.current_posture != self.previous_posture:
 
-                    print(
-                        f"Posture changed: "
-                        f"{self.previous_posture} -> "
-                        f"{self.current_posture}"
+                    self.transition = (
+                        f"{self.previous_posture} -> {self.current_posture}"
                     )
 
-                    self.previous_posture = self.current_posture
+                print(f"Transition : {self.transition}")
+
+                self.previous_posture = self.current_posture
+                if self.transition == "Sitting -> Standing":
+
+                    print("Recovery Detected!")
 
                 # -----------------------------
                 # Draw Body Centers
@@ -257,6 +264,7 @@ class Webcam:
                     self.fall_duration,
                     self.fall_detected,
                     self.fall_confidence,
+                    self.transition,
                 )
 
             else:

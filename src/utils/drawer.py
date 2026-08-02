@@ -16,6 +16,7 @@ class Drawer:
         fall_duration,
         fall_detected,
         fall_confidence,
+        transition,
     ):
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -109,6 +110,16 @@ class Drawer:
             posture_color,
             3,
         )
+
+        cv2.putText(
+    frame,
+    f"Transition     : {transition}",
+    (20, 415),
+    font,
+    1,
+    (255, 255, 255),
+    2,
+)
 
         if fall_detected:
 
