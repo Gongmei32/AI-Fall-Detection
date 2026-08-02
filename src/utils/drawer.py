@@ -1,3 +1,7 @@
+from pydoc import text
+from tkinter import font
+from tkinter import font
+
 import cv2
 
 
@@ -111,15 +115,41 @@ class Drawer:
             3,
         )
 
+        text = f"Transition : {transition}"
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 1
+        thickness = 2
+
+        (text_width, text_height), _ = cv2.getTextSize(
+            text,
+            font,
+            font_scale,
+            thickness
+        )
+
+        frame_height, frame_width = frame.shape[:2]
+
+        x = (frame_width - text_width) // 2
+        y = 40
+
+        cv2.rectangle(
+            frame,
+            (x - 15, y - text_height - 10),
+            (x + text_width + 15, y + 10),
+            (0, 0, 0),
+            -1,
+        )
+
         cv2.putText(
-    frame,
-    f"Transition     : {transition}",
-    (20, 415),
-    font,
-    1,
-    (255, 255, 255),
-    2,
-)
+            frame,
+            text,
+            (x, y),
+            font,
+            font_scale,
+            (255, 255, 255),
+            thickness,
+        )
 
         if fall_detected:
 
