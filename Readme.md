@@ -184,3 +184,71 @@ Implemented a confidence-based fall detection system that evaluates multiple bod
 - Hip Speed
 - Posture
 - Fall Duration
+
+# Milestone 6.6 – Fall Event Validation
+
+## Status
+🟡 In Progress
+
+---
+
+## Milestone 6.6.1 – Posture Transition Tracking ✅
+
+### Objective
+
+Track posture changes between consecutive frames.
+
+### Features
+
+- Previous posture tracking
+- Current posture tracking
+- Transition logging
+- Console transition output
+
+### Example
+
+Transition : Standing -> Sitting
+
+Transition : Sitting -> Standing
+
+Transition : Standing -> Lying
+
+### Outcome
+
+The system can now remember the previous posture and compare it with the current posture to detect movement transitions.
+
+---
+
+## Milestone 6.6.2 – Transition Detection ✅
+
+### Objective
+
+Identify posture transitions that may indicate a fall or recovery.
+
+### Features Implemented
+
+- Transition state variable
+- Automatic transition detection
+- Detection of:
+  - Standing → Lying
+  - Standing → Sitting
+  - Sitting → Standing
+  - Sitting → Lying
+  - Lying → Standing
+- Transition displayed in the live information panel
+- Console logging for every posture transition
+- Foundation prepared for fall event validation
+
+### Example Output
+
+Transition : Standing -> Sitting
+
+Transition : Sitting -> Standing
+
+Transition : Standing -> Lying
+
+Possible Fall Detected
+
+Transition : Lying -> Standing
+
+Recovery Detected
