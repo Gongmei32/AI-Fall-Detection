@@ -1,0 +1,12 @@
+v1  → Camera acquisition
+v2  → MediaPipe pose detection
+v3  → Body + knee angle calculation
+v4  → Posture classification
+v5  → Hip movement tracking
+v6  → Fall duration
+v7  → Fall confidence
+v8  → Fall confirmation
+v9  → Posture transition detection
+v10 → Demo sitting alert
+v11 → YOLO person detection
+v12 → Manual person selection/tracking
